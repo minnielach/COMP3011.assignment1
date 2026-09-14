@@ -1,0 +1,61 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: lavenderblush;
+	text-align: center;
+	margin: 0px;
+	padding: 40px;
+}
+
+.container {
+	background-color: white;
+	width: 500px;
+	max-width: 90%;
+	margin: auto;
+	padding: 30px;
+	border-radius: 20px;
+}
+
+h1 {
+	color: lightpink;
+	font-weight: bolder;
+}
+
+#status {
+	color: palevioletred;
+	font-weight: bold;
+}
+
+button {
+	padding: 10px 20px;
+	margin: 10px;
+	border: none;
+	border-radius: 10px;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+#startButton {
+	background-color: hotpink;
+	color: white;
+}
+
+#stopButton {
+	background-color: hotpink;
+	color: white;
+}
+
+button:disabled  {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.transcriptBox {
+	margin-top: 25px;
+	padding: 15px;
+	background-color: lavenderblush;
+	border-radius: 11px;
+}
+
+.transcriptBox h2 {
+	color: palevioletred;
+}
