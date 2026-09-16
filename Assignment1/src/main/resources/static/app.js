@@ -29,7 +29,7 @@ startButton.onclick = async function() {
 	// combine all of recorded partsinto one file
 	recorder.onstop = function() {
 		const audioBlob = new Blob(audios, {
-			// keep the same audio file
+			// keep the same audio type
 			type: recorder.mimeType
 		});
 		
@@ -37,7 +37,7 @@ startButton.onclick = async function() {
 		console.log(audioBlob);
 		
 		// create a form for the audio
-		const form = new formData();
+		const form = new FormData();
 		
 		// add the audio file to the form
 		form.append("file", audioBlob, "recording.webm");
