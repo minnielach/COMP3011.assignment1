@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.*;
 
 @RestController
 public class AdminController {
@@ -15,15 +16,22 @@ public class AdminController {
 	// return the server uptime information
 	@GetMapping("/api/v1/admin/uptime")
 	public Map<String, Object> getUptime() {
+		// get current time 
+		Instant now = Instant.now();
 	
-	// get current time 
-	Instant now = Instant.now();
+		// calculate how many seconds the server has been running
+		double uptimeSeconds = Duration.between(serverStart, now).toMillis() / 1000.0;
 	
-	// calculate how many seconds the server has been running
-	double uptimeSeconds = Duration.between(serverStart, now).toMillis() / 1000.0;
+		// return the up time information as a JSON 
+		return Map.of("utcServerStart", serverStart.toString(), "utcNow", now.toString(), "serverUptimeSeconds", uptimeSeconds);
 	
-	// return the up time information as a JSON 
-	return Map.of("utcServerStart", serverStart.toString(), "utcNow", now.toString(), "serverUptimeSeconds", uptimeSeconds);
+	}
 	
+	// request for the sever shutdown 
+	@PostMapping("/api/v1/admin/shutdown") 
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public Map<String, String> shutdown() {
+		// return a message to confirm the shutdown
+		return Map.of("message", "Graceful shutdown requested.");
 	}
 }
