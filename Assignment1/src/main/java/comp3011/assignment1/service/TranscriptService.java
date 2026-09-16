@@ -15,7 +15,13 @@ import org.springframework.web.multipart.*;
 @Service
 public class TranscriptService {
 	
+	// store api key
 	private final String apiKey;
+	
+	// store the input and output tokens
+	private long inputTokens = 0;
+	
+	private long outputTokens = 0;
 	
 	// get api key from the environment
 	public TranscriptService(@Value("${OPENAI_API_KEY}") String apiKey) {
@@ -48,6 +54,16 @@ public class TranscriptService {
 		
 		// send this form and information to the OpenAI
 		return RestClient.create().post().uri("https://api.openai.com/v1/audio/transcriptions").contentType(MediaType.MULTIPART_FORM_DATA).header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey).body(form).retrieve().body(String.class);
+	}
+	
+	// return total input tokens
+	public long getInputTokens() {
+		return inputTokens;
+	}
+	
+	// return total output tokens
+	public long getOutputTokens() {
+		return outputTokens;
 	}
 
 }
