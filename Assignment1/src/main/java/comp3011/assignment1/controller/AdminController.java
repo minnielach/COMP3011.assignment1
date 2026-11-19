@@ -7,11 +7,20 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
+import comp3011.assignment1.service.*;
+
 @RestController
 public class AdminController {
 	
 	// store the time the server started
 	private final Instant serverStart = Instant.now();
+	
+	private final TranscriptService transcriptService;
+	
+	// connect the controller to the transcript 
+	public AdminController(TranscriptService transcriptService) {
+		this.transcriptService = transcriptService;
+	}
 	
 	// return the server uptime information
 	@GetMapping("/api/v1/admin/uptime")
@@ -34,4 +43,13 @@ public class AdminController {
 		// return a message to confirm the shutdown
 		return Map.of("message", "Graceful shutdown requested.");
 	}
+	
+	// return the global token stats
+	@GetMapping("/api/v1/global/stats") 
+	public Map<String, Long> getStats() {
+		
+		//return the total of input and output
+		return Map.of("inputTokens", transcriptService.getInputTokens(),"outputTokens", transcriptService.getOutputTokens());
+	}
+	
 }

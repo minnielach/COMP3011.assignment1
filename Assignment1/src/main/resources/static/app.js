@@ -39,8 +39,8 @@ startButton.onclick = async function() {
 		// create a form for the audio
 		const form = new FormData();
 		
-		// add the audio file to the form
-		form.append("file", audioBlob, "recording.webm");
+		// add the audio file to the form (safari is currently using mp4)
+		form.append("file", audioBlob, "recording.mp4");
 		
 		// update the page to let the user know it is processing
 		statusText.textContent = "Processing...";

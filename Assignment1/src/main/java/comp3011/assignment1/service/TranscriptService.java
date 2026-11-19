@@ -9,6 +9,7 @@ import org.springframework.stereotype.*;
 import org.springframework.util.*;
 import org.springframework.web.client.*;
 import org.springframework.web.multipart.*;
+import tools.jackson.databind.*;
 
 
 // handles the audio before transcription
@@ -32,6 +33,11 @@ public class TranscriptService {
 	// receives the audio file form the controller
 	public String transcribe(MultipartFile file) throws IOException {
 		
+		// check if the audio is received 
+		System.out.println("Audio name: " + file.getOriginalFilename());
+		System.out.println("Audio size: " + file.getSize());
+		System.out.println("Audio type: " + file.getContentType());
+		
 		// turn the audio into ByteArray resource
 		ByteArrayResource audio = new ByteArrayResource(file.getBytes()) {
 			
@@ -53,7 +59,24 @@ public class TranscriptService {
 		form.add("model", "gpt-4o-mini-transcribe");
 		
 		// send this form and information to the OpenAI
-		return RestClient.create().post().uri("https://api.openai.com/v1/audio/transcriptions").contentType(MediaType.MULTIPART_FORM_DATA).header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey).body(form).retrieve().body(String.class);
+		String response = RestClient.create().post().uri("https://api.openai.com/v1/audio/transcriptions").contentType(MediaType.MULTIPART_FORM_DATA).header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey).body(form).retrieve().body(String.class);
+		
+		// turn the response into a JSON that is readable
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode result = mapper.readTree(response);
+		
+		// store and get the usage
+		JsonNode usage = result.get("usage");
+		
+		// if the usage is null then add to the total
+		if (usage != null) {
+			inputTokens += usage.path("input_tokens").asLong();
+			outputTokens += usage.path("output_tokens").asLong();
+		}
+		
+		// return the result back to the frontend
+		return result.path("text").asString();
+		
 	}
 	
 	// return total input tokens
